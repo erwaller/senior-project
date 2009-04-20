@@ -12,7 +12,7 @@ ARCHITECTURE behavioral OF <%=@entity%> IS
   SIGNAL ps, ns : state;
 BEGIN
   state_machine: PROCESS( clock, reset ) BEGIN
-    IF reset = '1' THEN
+    IF reset = '0' THEN
       ps <= s0;  -- s0 is always the initial state
     ELSIF (clock'EVENT AND clock = '1') THEN
       ps <= ns;

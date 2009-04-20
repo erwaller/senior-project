@@ -6,7 +6,7 @@ def erb (view)
 end
 
 class Fixnum
-  def to_bv(length)
+  def to_bv(length) # 3.to_bv(5) => 00011
     self.to_s(2).rjust(length, '0')
   end
 end
