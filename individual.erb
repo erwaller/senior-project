@@ -11,7 +11,7 @@ ARCHITECTURE behavioral OF <%=@entity%> IS
   TYPE state is (<%=Range.new(0,@states.size-1).map{|i| "s#{i}"}.join(',')%>);
   SIGNAL ps, ns : state;
 BEGIN
-  state_machine: PROCESS( clock ) BEGIN
+  state_machine: PROCESS( clock, reset ) BEGIN
     IF reset = '1' THEN
       ps <= s0;  -- s0 is always the initial state
     ELSIF (clock'EVENT AND clock = '1') THEN
