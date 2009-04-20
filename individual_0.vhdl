@@ -20,33 +20,25 @@ BEGIN
     -- "move" to current state
     CASE ps IS
       WHEN s0 =>
-        -- output associated with this state
         data_out <= "0";
-        -- select next state based on inputs
         CASE data_in IS
           WHEN "0" => ns <= s0;
           WHEN "1" => ns <= s1;
         END CASE;
       WHEN s1 =>
-        -- output associated with this state
         data_out <= "0";
-        -- select next state based on inputs
         CASE data_in IS
           WHEN "0" => ns <= s1;
           WHEN "1" => ns <= s2;
         END CASE;
       WHEN s2 =>
-        -- output associated with this state
         data_out <= "1";
-        -- select next state based on inputs
         CASE data_in IS
           WHEN "0" => ns <= s2;
           WHEN "1" => ns <= s3;
         END CASE;
       WHEN s3 =>
-        -- output associated with this state
         data_out <= "1";
-        -- select next state based on inputs
         CASE data_in IS
           WHEN "0" => ns <= s3;
           WHEN "1" => ns <= s0;
