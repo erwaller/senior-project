@@ -2,7 +2,7 @@ require 'erb'
 
 def erb (view)
   template = ERB.new(IO.read("#{view}.erb"))
-  template.result.gsub(/\s+\n/m, "\n")
+  template.result.gsub(/^\s+\n/, "")
 end
 
 class Fixnum
