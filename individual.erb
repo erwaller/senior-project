@@ -1,0 +1,27 @@
+-- A state machine with 1 ins, 1 outs, and 4 states
+
+ENTITY individual_0 IS PORT(
+  clock, reset:    IN BIT;
+  data_in:         IN BIT_VECTOR( <%=@inputs-1%> DOWNTO 0 );
+  data_out:        OUT BIT_VECTOR ( <%=@outputs-1%> DOWNTO 0 )
+  );
+END individual_0;
+
+ARCHITECTURE behavioral OF individual_0 IS
+  TYPE state is (<%=@states.map{|i| "s#{i}"}.join(',')%>);
+  SIGNAL ps, ns : state;
+BEGIN
+  state_machine: PROCESS( clock ) BEGIN
+    IF reset = '1' THEN
+      ps <= s0;  -- s0 is always the initial state
+    ELSIF (clock'EVENT AND clock = '1') THEN
+      ps <= ns;
+    END IF;
+    -- "move" to current state
+    CASE ps IS
+    <% @states.each do |s| %>
+        WHEN <%="s#{s}"%> =>
+    <% end %>
+    END CASE;
+  END PROCESS state_machine;
+END behavioral;
