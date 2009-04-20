@@ -22,6 +22,8 @@ end
 # s0     => [nil,   0, nil,   1] |   0
 # s1     => [1  , nil,   0,   0] |   1
 
+@individual = 1
+@entity = "individual_#{@individual}"
 @inputs = 2
 @outputs = 1
 @states = [
