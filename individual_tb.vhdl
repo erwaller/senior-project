@@ -1,32 +1,13 @@
--- clock stuff (better version below)
-CONSTANT half_period : TIME := 12.5 ns;
-...
-clock_gen: PROCESS BEGIN
-  clock <= '0' AFTER half_period, '1' AFTER 2 * half_period;
-  WAIT FOR 2 * half_period;
-END PROCESS clock_gen;
+ENTITY source_tb IS
+END source_tb;
 
-
--- initialization stuff
-tb: PROCESS BEGIN
-  -- wait for global reset (?) to finish
-  WAIT FOR 100 ns;
-  -- initialize inputs
-  reset <= '0'; data_in <= "00";
-  WAIT FOR 100 ns;
-  -- release reset
-  reset <= '1';
-  WAIT FOR 1 us;
-...
-
-
--- test data source/sink
 LIBRARY IEEE;
 USE IEEE.std_logic_1164.all;
 USE IEEE.std_logic_arith.all;
 USE std.textio.all;
 USE IEEE.std_logic_textio.all;
 
+-- test data source/sink
 ARCHITECTURE text_io OF source_tb IS
   COMPONENT tb_adder
     PORT (
