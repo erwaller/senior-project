@@ -1,4 +1,4 @@
-name = hello_world
+name = adder
 
 $(name): $(name).vhdl
 	ghdl -a $(name).vhdl
@@ -6,6 +6,5 @@ $(name): $(name).vhdl
 
 clean:
 	rm -f work-obj93.cf
-	rm -f $(name).o
-	rm -f e~$(name).o
+	rm -f *.o
 	rm -f $(name)
