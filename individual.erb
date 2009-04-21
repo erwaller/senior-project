@@ -31,6 +31,7 @@ BEGIN
             WHEN OTHERS => NULL;
           END CASE;
     <% end %>
+      WHEN OTHERS => NULL;
     END CASE;
   END PROCESS state_machine;
 END behavioral;
