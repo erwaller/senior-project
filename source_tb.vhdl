@@ -3,9 +3,8 @@ END source_tb;
 
 LIBRARY IEEE;
 USE IEEE.std_logic_1164.all;
-USE IEEE.std_logic_arith.all; -- requires the "--ieee=synopsys" flag
+USE IEEE.numeric_std.all;
 USE std.textio.all;
-USE IEEE.std_logic_textio.all;
 
 -- test data source/sink
 ARCHITECTURE text_io OF source_tb IS
@@ -49,9 +48,9 @@ BEGIN
       IF NOT (ENDFILE(file_in)) THEN
         READLINE(file_in, line_in);
         READ(line_in, input_tmp);
-        a <= CONV_UNSIGNED(input_tmp, 3);
-        b <= CONV_UNSIGNED(input_tmp, 3);
-        output_tmp := CONV_INTEGER(y);
+        a <= TO_UNSIGNED(input_tmp, 3);
+        b <= TO_UNSIGNED(input_tmp, 3);
+        output_tmp := TO_INTEGER(y);
         WRITE(line_out, output_tmp);
         WRITELINE(file_out, line_out);
       ELSE
