@@ -43,7 +43,7 @@ BEGIN
     FILE out_file  : TEXT IS OUT "out.txt";
     VARIABLE line_in  : LINE;
     VARIABLE line_out : LINE;
-    VARIABLE data_in_tmp : INTEGER;
+    VARIABLE data_in_tmp : UNSIGNED(3 DOWNTO 0);
     VARIABLE input_tmp   : INTEGER;
     VARIABLE output_tmp  : INTEGER;
   BEGIN
@@ -54,14 +54,14 @@ BEGIN
         -- place in0 in the upper two bits of data_in_tmp
         READLINE(in0_file, line_in);
         READ(line_in, input_tmp);
-        data_in_tmp := input_tmp * 4;
+        data_in_tmp := SHIFT_LEFT(TO_UNSIGNED(input_tmp, 4), 2);
         
         -- place in1 in the lower two bits of data_in_tmp
         READLINE(in1_file, line_in);
         READ(line_in, input_tmp);
-        data_in_tmp := data_in_tmp + input_tmp;
+        data_in_tmp := data_in_tmp + TO_UNSIGNED(input_tmp, 2);
         
-        data_in <= TO_UNSIGNED(data_in_tmp, 4);
+        data_in <= data_in_tmp;
         
         output_tmp := TO_INTEGER(data_out);
         WRITE(line_out, output_tmp);
