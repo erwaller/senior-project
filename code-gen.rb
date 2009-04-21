@@ -6,43 +6,43 @@ class Fixnum
   end
 end
 
-module Codegen
-  # a state is an array of transitions, and an output
-  # integer entries in the transition table represent
-  # next states, and nil entries represent no transition
-  # 
-  # here's a sample state machine with 2 inputs, 1 output
-  # and 2 states.
-  #
-  # inputs =>  00   01   10   11   | output 
-  # s0     => [nil,   0, nil,   1] |   0
-  # s1     => [1  , nil,   0,   0] |   1
+class Individual
+  def initialize()
+    # a state is an array of transitions, and an output
+    # integer entries in the transition table represent
+    # next states, and nil entries represent no transition
+    # 
+    # here's a sample state machine with 2 inputs, 1 output
+    # and 2 states.
+    #
+    # inputs =>  00   01   10   11   | output 
+    # s0     => [nil,   0, nil,   1] |   0
+    # s1     => [1  , nil,   0,   0] |   1
 
-  @individual = 1
-  @entity = "adder"
-  @architecture = "individual_#{@individual}"
+    @individual = 1
+    @entity = "adder"
+    @architecture = "individual_#{@individual}"
 
-  # to keep this code simple there is a single unsigned
-  # unsigned input array. if you want to do something like
-  # add two 2-bit integers just put them side-by-side into
-  # a 4-bit array
-  @inputs = 4
-  @outputs = 4
-  @states = [
-    {:transitions => [nil, 0, nil, 1], :output => 0},
-    {:transitions => [1, nil, 0, 0], :output => 1},
-  ]
-  
-  def self.render()
-    erb :individual
+    # to keep this code simple there is a single unsigned
+    # unsigned input array. if you want to do something like
+    # add two 2-bit integers just put them side-by-side into
+    # a 4-bit array
+    @inputs = 4
+    @outputs = 4
+    @states = [
+      {:transitions => [nil, 0, nil, 1], :output => 0},
+      {:transitions => [1, nil, 0, 0], :output => 1},
+    ]
   end
   
+  def render()
+    erb :individual
+  end
 private
-  def self.erb (view)
+  def erb (view)
     template = ERB.new(IO.read("#{view}.erb"))
     template.result(binding).gsub(/^\s+\n/, "")
   end
 end
 
-
-print Codegen::render()
+print Individual.new.render()
