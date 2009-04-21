@@ -1,9 +1,12 @@
 -- <%=@entity%> is a state machine with <%=@inputs%> inputs, <%=@outputs%> outputs, and <%=@states.size%> states
 
+LIBRARY IEEE;
+USE IEEE.std_logic_1164.all;
+
 ENTITY <%=@entity%> IS PORT(
-  clock, reset:    IN BIT;
-  data_in:         IN BIT_VECTOR( <%=@inputs-1%> DOWNTO 0 );
-  data_out:        OUT BIT_VECTOR ( <%=@outputs-1%> DOWNTO 0 )
+  clock, reset:    IN STD_LOGIC;
+  data_in:         IN STD_LOGIC_VECTOR( <%=@inputs-1%> DOWNTO 0 );
+  data_out:        OUT STD_LOGIC_VECTOR ( <%=@outputs-1%> DOWNTO 0 )
   );
 END <%=@entity%>;
 
