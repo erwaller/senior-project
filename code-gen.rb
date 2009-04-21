@@ -3,8 +3,8 @@ require 'monkey'
 class State
   attr_accessor :transitions, :output
   
-  def initialize(size = 0, output = 0)
-    @transitions = Array.new(size).fill(nil)
+  def initialize(size, number_of_states, output = 0)
+    @transitions = Array.new(size).fill{|i| state_or_nil(number_of_states+1)}
     @output = output
   end
 
@@ -26,13 +26,18 @@ class State
   def replace_transition(max)
     # semantics similar to rand (max-1 is highest transition)
     pos = rand(@transitions.size)
-    r = rand(max*2)
-    new_transition = r > max-1 ? nil : r
-    @transitions[pos] = possibles[rand(max)]
+    @transitions[pos] = state_or_nil(max)
   end
 
   def reorder_transitions()
     @transitions.shuffle!
+  end
+private
+  def state_or_nil(max)
+    # returns an integer i or nil where
+    # 0 <= i < max and P(i) == P(nil)
+    r = rand(max*2)
+    r > max-1 ? nil : r
   end
 end
 
@@ -61,7 +66,8 @@ class Individual
     # inputs =>  00   01   10   11   | output 
     # s0     => [nil,   0, nil,   1] |   0
     # s1     => [1  , nil,   0,   0] |   1
-    @states = [new_state]
+    @states = []
+    add_state
   end
   
   def mutate()
@@ -96,6 +102,10 @@ private
   def reorder_states()
     states.shuffle!
   end
+
+  def change_output()
+    random_state.output = random_output
+  end
   
   # transition mutations
   def replace_transition()
@@ -108,12 +118,16 @@ private
   
   # convenience
   def new_state()
-    State.new(@inputs**2)
+    State.new(@inputs**2, states.size, random_output)
   end
 
   def random_state()
     pos = rand(states.size)
     states[pos]
+  end
+
+  def random_output()
+    rand(@outputs**2)
   end
   
   # code generation
