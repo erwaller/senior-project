@@ -40,7 +40,7 @@ BEGIN
   PROCESS (clk, rst_n)
     FILE in0_file  : TEXT IS IN "in0.txt";
     FILE in1_file  : TEXT IS IN "in1.txt";
-    FILE out_file : TEXT IS OUT "out.txt";
+    FILE out_file  : TEXT IS OUT "out.txt";
     VARIABLE line_in  : LINE;
     VARIABLE line_out : LINE;
     VARIABLE data_in_tmp : INTEGER;
