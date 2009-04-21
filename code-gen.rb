@@ -23,9 +23,15 @@ end
 # s1     => [1  , nil,   0,   0] |   1
 
 @individual = 1
-@entity = "individual_#{@individual}"
-@inputs = 2
-@outputs = 1
+@entity = "adder"
+@architecture = "individual_#{@individual}"
+
+# to keep this code simple there is a single unsigned
+# unsigned input array. if you want to do something like
+# add two 2-bit integers just put them side-by-side into
+# a 4-bit array
+@inputs = 4
+@outputs = 4
 @states = [
   {:transitions => [nil, 0, nil, 1], :output => 0},
   {:transitions => [1, nil, 0, 0], :output => 1},

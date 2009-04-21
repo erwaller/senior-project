@@ -1,4 +1,4 @@
--- <%=@entity%> is a state machine with <%=@inputs%> inputs, <%=@outputs%> outputs, and <%=@states.size%> states
+-- <%=@archiecture%> is a state machine with <%=@inputs%> inputs, <%=@outputs%> outputs, and <%=@states.size%> states
 
 LIBRARY IEEE;
 USE IEEE.std_logic_1164.all;
@@ -11,7 +11,7 @@ ENTITY <%=@entity%> IS PORT(
   );
 END <%=@entity%>;
 
-ARCHITECTURE behavioral OF <%=@entity%> IS
+ARCHITECTURE <%=@architecture%> OF <%=@entity%> IS
   TYPE state is (<%=Range.new(0,@states.size-1).map{|i| "s#{i}"}.join(',')%>);
   SIGNAL ps, ns : state;
 BEGIN
@@ -38,5 +38,5 @@ BEGIN
       WHEN OTHERS => NULL;
     END CASE;
   END PROCESS state_machine;
-END behavioral;
+END <%=@architecture%>;
 
