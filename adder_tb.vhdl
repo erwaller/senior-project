@@ -1,5 +1,5 @@
-ENTITY individual_tb IS
-END individual_tb;
+ENTITY adder_tb IS
+END adder_tb;
 
 LIBRARY IEEE;
 USE IEEE.std_logic_1164.all;
@@ -7,7 +7,7 @@ USE IEEE.numeric_std.all;
 USE std.textio.all;
 
 -- test data source/sink
-ARCHITECTURE text_io OF individual_tb IS
+ARCHITECTURE text_io OF adder_tb IS
   COMPONENT adder
     PORT (
       clock, reset : IN STD_LOGIC;
