@@ -26,7 +26,8 @@ class State
   def replace_transition(max)
     # semantics similar to rand (max-1 is highest transition)
     pos = rand(@transitions.size)
-    possibles = (0..max-1).push(nil)
+    r = rand(max*2)
+    new_transition = r > max-1 ? nil : r
     @transitions[pos] = possibles[rand(max)]
   end
 
