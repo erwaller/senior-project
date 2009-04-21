@@ -48,7 +48,7 @@ class Individual
     # inputs =>  00   01   10   11   | output 
     # s0     => [nil,   0, nil,   1] |   0
     # s1     => [1  , nil,   0,   0] |   1
-    @states = [State.new(@inputs**2)]
+    @states = [new_state]
   end
   
   def mutate()
@@ -64,17 +64,28 @@ class Individual
 private
   # available mutations
   def add_state()
+    states.push(new_state)
   end
 
   def remove_state()
+    return unless states.size > 1
+    pos = rand(states.size)
+    states.slice!(pos)
+    states.each{|s| s.ceil(states.size)} #make sure all transitions are valid
   end
 
   def replace_state()
-    
+    pos = rand(states.size)
+    states[pos] = new_state
   end
 
   def reorder_states()
     @states.shuffle!
+  end
+  
+  # convenience
+  def new_state()
+    State.new(@inputs**2)
   end
   
   # code generation
