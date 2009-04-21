@@ -16,10 +16,22 @@ class State
     @transitions.shuffle!
   end
 
-  def ceil(height)
+  def ceil(max)
     # assures all transitions are to valid states
     # transitions will be 0 -> (height-1)
-    @transitions.map!{|t| t % height unless t.nil?}
+    @transitions.map!{|t| t % max unless t.nil?}
+  end
+
+  # transition mutations
+  def replace_transition(max)
+    # semantics similar to rand (max-1 is highest transition)
+    pos = rand(@transitions.size)
+    possibles = (0..max-1).push(nil)
+    @transitions[pos] = possibles[rand(max)]
+  end
+
+  def reorder_transitions()
+    @transitions.shuffle!
   end
 end
 
@@ -62,8 +74,10 @@ class Individual
     erb :individual
   end
 private
-  # available mutations
+  # state collection mutations
   def add_state()
+    # new states are appended--instead of inserted
+    # at a random position--for now
     states.push(new_state)
   end
 
@@ -75,17 +89,30 @@ private
   end
 
   def replace_state()
-    pos = rand(states.size)
-    states[pos] = new_state
+    random_state.replace(new_state)
   end
 
   def reorder_states()
-    @states.shuffle!
+    states.shuffle!
+  end
+  
+  # transition mutations
+  def replace_transition()
+    random_state.replace_transition(states.size)
+  end
+  
+  def reorder_transitions()
+    random_state.reorder_transitions 
   end
   
   # convenience
   def new_state()
     State.new(@inputs**2)
+  end
+
+  def random_state()
+    pos = rand(states.size)
+    states[pos]
   end
   
   # code generation
