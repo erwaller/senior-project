@@ -1,4 +1,12 @@
-require 'erb'
+class Array
+  def shuffle
+    sort_by { rand }
+  end
+
+  def shuffle!
+    self.replace shuffle
+  end
+end
 
 class Fixnum
   def to_bv(length) # 3.to_bv(5) => 00011
@@ -6,9 +14,31 @@ class Fixnum
   end
 end
 
+class State
+  attr_accessor :transitions, :output
+  
+  def initialize(size = 0, output = 0)
+    @transitions = Array.new(size).fill(nil)
+    @output = output
+  end
+end
+
 class Individual
+  attr_reader :states
+  
   def initialize(entity, id, ins, outs)
-    # a state is an array of transitions, and an output
+    @id = id
+    @entity = entity
+    @architecture = "individual_#{@id}"
+
+    # to keep this code simple there is a single unsigned
+    # input array. if you want to do something like add
+    # two 2-bit integers just put them side-by-side into
+    # a 4-bit array
+    @inputs = ins
+    @outputs = outs
+
+    # a state is an array of transitions, and an output.
     # integer entries in the transition table represent
     # next states, and nil entries represent no transition
     # 
@@ -18,28 +48,36 @@ class Individual
     # inputs =>  00   01   10   11   | output 
     # s0     => [nil,   0, nil,   1] |   0
     # s1     => [1  , nil,   0,   0] |   1
+    @states = [State.new(@inputs**2)]
+  end
+  
+  def mutate()
+  end
 
-    @id = id
-    @entity = entity
-    @architecture = "individual_#{@id}"
-
-    # to keep this code simple there is a single unsigned
-    # unsigned input array. if you want to do something like
-    # add two 2-bit integers just put them side-by-side into
-    # a 4-bit array
-    @inputs = ins
-    @outputs = outs
-    @states = [
-      {:transitions => [nil, 0, nil, 1], :output => 0},
-      {:transitions => [1, nil, 0, 0], :output => 1},
-    ]
+  def mutate!()
+    self.replace mutate
   end
   
   def render()
     erb :individual
   end
 private
+  # available mutations
+  def add_state()
+  end
+
+  def remove_state()
+  end
+
+  def replace_state()
+  end
+
+  def reorder_states()
+  end
+  
+  # code generation
   def erb (view)
+    require 'erb'
     template = ERB.new(IO.read("#{view}.erb"))
     template.result(binding).gsub(/^\s+\n/, "")
   end

@@ -12,7 +12,7 @@ ENTITY <%=@entity%> IS PORT(
 END <%=@entity%>;
 
 ARCHITECTURE <%=@architecture%> OF <%=@entity%> IS
-  TYPE state is (<%=Range.new(0,@states.size-1).map{|i| "s#{i}"}.join(',')%>);
+  TYPE state is (<%=Range.new(0,states.size-1).map{|i| "s#{i}"}.join(',')%>);
   SIGNAL ps, ns : state;
 BEGIN
   state_machine: PROCESS( clock, reset ) BEGIN
@@ -23,11 +23,11 @@ BEGIN
     END IF;
     -- "move" to current state
     CASE ps IS
-    <% @states.each_with_index do |s, i| %>
+    <% states.each_with_index do |s, i| %>
         WHEN <%="s#{i}"%> =>
-          data_out <= "<%=s[:output].to_bv(@outputs)%>";
+          data_out <= "<%=s.output.to_bv(@outputs)%>";
           CASE data_in IS
-          <% s[:transitions].each_with_index do |t, j| %>
+          <% s.transitions.each_with_index do |t, j| %>
             <% if not t.nil? %>
             WHEN "<%=j.to_bv(@inputs)%>" => ns <= <%="s#{t}"%>;
             <% end %>
