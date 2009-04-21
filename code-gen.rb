@@ -7,6 +7,20 @@ class State
     @transitions = Array.new(size).fill(nil)
     @output = output
   end
+
+  def initialize_copy(from)
+    @transitions, @output = from.transitions.clone, from.output
+  end
+
+  def reorder_transitions
+    @transitions.shuffle!
+  end
+
+  def ceil(height)
+    # assures all transitions are to valid states
+    # transitions will be 0 -> (height-1)
+    @transitions.map!{|t| t % height unless t.nil?}
+  end
 end
 
 class Individual
@@ -24,7 +38,7 @@ class Individual
     @inputs = ins
     @outputs = outs
 
-    # a state is an array of transitions, and an output.
+    # a state has an array of transitions, and an output.
     # integer entries in the transition table represent
     # next states, and nil entries represent no transition
     # 
@@ -56,9 +70,11 @@ private
   end
 
   def replace_state()
+    
   end
 
   def reorder_states()
+    @states.shuffle!
   end
   
   # code generation
