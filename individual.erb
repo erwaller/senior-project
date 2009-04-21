@@ -2,11 +2,12 @@
 
 LIBRARY IEEE;
 USE IEEE.std_logic_1164.all;
+USE IEEE.numeric_std.all;
 
 ENTITY <%=@entity%> IS PORT(
   clock, reset:    IN STD_LOGIC;
-  data_in:         IN STD_LOGIC_VECTOR( <%=@inputs-1%> DOWNTO 0 );
-  data_out:        OUT STD_LOGIC_VECTOR ( <%=@outputs-1%> DOWNTO 0 )
+  data_in:         IN UNSIGNED( <%=@inputs-1%> DOWNTO 0 );
+  data_out:        OUT UNSIGNED( <%=@outputs-1%> DOWNTO 0 )
   );
 END <%=@entity%>;
 
