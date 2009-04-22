@@ -1,6 +1,4 @@
 require 'individual'
-require 'fileutils'
-include FileUtils
 
 entity = 'adder'
 inputs = 4
