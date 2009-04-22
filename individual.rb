@@ -51,7 +51,7 @@ private
     # new state is inserted at a random position
     size = states.size
     pos = rand(size)
-    tail = states.splice!(pos, size-pos)
+    tail = states.slice!(pos, size-pos)
     states.push(new_state(size)).concat(tail)
   end
 
