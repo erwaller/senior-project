@@ -35,7 +35,9 @@ task :build do
   touch "out.txt"
 
   # finally! run the test_bench (and generate a vcd file)
-  sh "ghdl -r #{test_bench} --vcd=#{test_bench}.vcd"
+  sh "ghdl -r #{test_bench} --vcd=#{test_bench}.vcd" do |ok, res|
+    # we expect this to have an error, ignore it
+  end
 end
 
 task :clean do
