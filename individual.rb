@@ -30,6 +30,12 @@ class Individual
   end
   
   def mutate()
+    add_state           if (states.size < 2 ? p(0.3) : p(0.1))
+    remove_state        if p(0.1)
+    reorder_states      if p(0.1)
+    change_output       if p(0.1)
+    replace_transition  if p(0.5)
+    reorder_transitions if p(0.1)
   end
 
   def mutate!()
@@ -42,9 +48,11 @@ class Individual
 private
   # state collection mutations
   def add_state()
-    # new states are appended--instead of inserted
-    # at a random position--for now
-    states.push(new_state)
+    # new state is inserted at a random position
+    size = states.size
+    pos = rand(size)
+    tail = states.splice!(pos, size-pos)
+    states.push(new_state(size)).concat(tail)
   end
 
   def remove_state()
@@ -52,10 +60,6 @@ private
     pos = rand(states.size)
     states.slice!(pos)
     states.each{|s| s.ceil(states.size)} #make sure all transitions are valid
-  end
-
-  def replace_state()
-    random_state.replace(new_state)
   end
 
   def reorder_states()
@@ -76,7 +80,8 @@ private
   end
   
   # convenience
-  def new_state()
+  def new_state(size = nil)
+    size ||= states.size  # needed for add_state
     State.new(@inputs**2, states.size, random_output)
   end
 
@@ -87,6 +92,10 @@ private
 
   def random_output()
     rand(@outputs**2)
+  end
+
+  def p(prob)
+    rand() < prob
   end
   
   # code generation
