@@ -37,10 +37,6 @@ class Individual
     replace_transition  if p(0.5)
     reorder_transitions if p(0.1)
   end
-
-  def mutate!()
-    self.replace mutate
-  end
   
   def render()
     erb :vhdl
