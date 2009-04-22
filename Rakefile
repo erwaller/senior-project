@@ -4,19 +4,20 @@ entity = 'adder'
 inputs = 4
 outputs = 4
 test_bench = 'adder_tb'
+build = 'build'
 
-task :default do
-  mkdir_p 'build'
+task :build do
+  mkdir_p build
 
   # create the individual
   id = 0
   individual = Individual.new(entity, id, inputs, outputs)
   file = "individual_#{id}.vhdl"
-  File.open(File.join('build', file), 'w') do |f|
+  File.open(File.join(build, file), 'w') do |f|
     f.write(individual.render)
   end
 
-  cd 'build'
+  cd build
 
   # analyze and elaborate the individual
   sh "ghdl -a #{file}"
@@ -35,5 +36,9 @@ task :default do
 
   # finally! run the test_bench (and generate a vcd file)
   sh "ghdl -r #{test_bench} --vcd=#{test_bench}.vcd"
+end
+
+task :clean do
+  rm_rf build
 end
 
