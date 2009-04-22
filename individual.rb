@@ -1,50 +1,9 @@
 require 'monkey'
 
-class State
-  attr_accessor :transitions, :output
-  
-  def initialize(size, number_of_states, output = 0)
-    @transitions = Array.new(size).fill{|i| state_or_nil(number_of_states+1)}
-    @output = output
-  end
-
-  def initialize_copy(from)
-    @transitions, @output = from.transitions.clone, from.output
-  end
-
-  def reorder_transitions
-    @transitions.shuffle!
-  end
-
-  def ceil(max)
-    # assures all transitions are to valid states
-    # transitions will be 0 -> (height-1)
-    @transitions.map!{|t| t % max unless t.nil?}
-  end
-
-  # transition mutations
-  def replace_transition(max)
-    # semantics similar to rand (max-1 is highest transition)
-    pos = rand(@transitions.size)
-    @transitions[pos] = state_or_nil(max)
-  end
-
-  def reorder_transitions()
-    @transitions.shuffle!
-  end
-private
-  def state_or_nil(max)
-    # returns an integer i or nil where
-    # 0 <= i < max and P(i) == P(nil)
-    r = rand(max*2)
-    r > max-1 ? nil : r
-  end
-end
-
 class Individual
   attr_reader :states
   
-  def initialize(entity, id, ins, outs)
+  def initialize(entity, id, ins, outs, initial_states = 1)
     @id = id
     @entity = entity
     @architecture = "individual_#{@id}"
@@ -67,7 +26,7 @@ class Individual
     # s0     => [nil,   0, nil,   1] |   0
     # s1     => [1  , nil,   0,   0] |   1
     @states = []
-    add_state
+    initial_states.times{ add_state }
   end
   
   def mutate()
@@ -78,7 +37,7 @@ class Individual
   end
   
   def render()
-    erb :individual
+    erb :vhdl
   end
 private
   # state collection mutations
@@ -138,5 +97,45 @@ private
   end
 end
 
-print Individual.new("adder", 1, 4, 4).render()
+class State
+  attr_accessor :transitions, :output
+  
+  def initialize(size, number_of_states, output = 0)
+    @transitions = Array.new(size).fill{|i| state_or_nil(number_of_states+1)}
+    @output = output
+  end
+
+  def initialize_copy(from)
+    @transitions, @output = from.transitions.clone, from.output
+  end
+
+  def reorder_transitions
+    @transitions.shuffle!
+  end
+
+  def ceil(max)
+    # assures all transitions are to valid states
+    # transitions will be 0 -> (height-1)
+    @transitions.map!{|t| t % max unless t.nil?}
+  end
+
+  # transition mutations
+  def replace_transition(max)
+    # semantics similar to rand (max-1 is highest transition)
+    pos = rand(@transitions.size)
+    @transitions[pos] = state_or_nil(max)
+  end
+
+  def reorder_transitions()
+    @transitions.shuffle!
+  end
+private
+  def state_or_nil(max)
+    # returns an integer i or nil where
+    # 0 <= i < max and P(i) == P(nil)
+    r = rand(max*2)
+    r > max-1 ? nil : r
+  end
+end
+
 
