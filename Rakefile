@@ -1,7 +1,10 @@
 require 'individual'
 
+home = File.dirname(__FILE__)
+
 entity = 'adder'
-inputs = 4
+inputs = 4          # how many bits of input to in the state machine
+logical_inputs = 2  # how many conceptual inputs to the device we're creating
 outputs = 4
 test_bench = 'adder_tb'
 build = 'build'
@@ -29,11 +32,13 @@ task :build do
   sh "ghdl -e #{test_bench}"
 
   #create input/output files
-  inputs.times do |i|
-    touch "in#{i-1}.txt"
+  logical_inputs.times do |i|
+    touch "in#{i}.txt"
   end
   touch "out.txt"
+end
 
+task :run => :build do
   # finally! run the test_bench (and generate a vcd file)
   sh "ghdl -r #{test_bench} --vcd=#{test_bench}.vcd" do |ok, res|
     # we expect this to have an error, ignore it
