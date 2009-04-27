@@ -10,17 +10,17 @@ test_bench = 'adder_tb'
 build = 'build'
 
 task :build do
-  mkdir_p build
+  mkdir_p File.join(entity, build)
 
   # create the individual
   id = 0
   individual = Individual.new(entity, id, inputs, outputs)
   file = "individual_#{id}.vhdl"
-  File.open(File.join(build, file), 'w') do |f|
+  File.open(File.join(entity, build, file), 'w') do |f|
     f.write(individual.render)
   end
 
-  cd build
+  cd File.join(entity, build)
 
   # analyze and elaborate the individual
   sh "ghdl -a #{file}"
@@ -46,6 +46,6 @@ task :run => :build do
 end
 
 task :clean do
-  rm_rf build
+  rm_rf File.join(entity, build)
 end
 
