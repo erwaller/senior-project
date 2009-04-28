@@ -5,7 +5,7 @@ def pack(a, b)
   (a << 2) + b
 end
 
-def fitness(individual, iterations=100)
+def fitness(individual, iterations=10000)
   correct = 0.0
   iterations.times do |i|
     a, b = rand(4), rand(4)
@@ -18,9 +18,11 @@ def fitness(individual, iterations=100)
 end
 
 class HillClimber
+  attr_reader :best_fitness, :best_individual, :current_generation
+
   def initialize(population_size = 20)
     @population_size = population_size
-    @current_generation = 0
+    @current_generation = -1
     @best_fitness = 0
     @best_individual = nil
     
@@ -46,8 +48,6 @@ class HillClimber
 
     @best_fitness = best_fit
     @best_individual = best_ind
-
-    puts "Generation #{@current_generation} best fitness: #{@best_fitness}"
     
     next_generation = Array.new(@population_size).fill do |i|
       ind = @best_individual.deep_copy
@@ -60,8 +60,14 @@ class HillClimber
 end
 
 h = HillClimber.new(20)
+boundary = 0.4
 while 1 do
   h.iterate()
+  puts "Generation #{h.current_generation} best fitness: #{h.best_fitness}"
+  if h.best_fitness > boundary
+    boundary += 0.1
+    puts h.best_individual.inspect
+  end
 end
 
 
