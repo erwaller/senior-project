@@ -2,6 +2,7 @@ require 'monkey'
 
 class Individual
   attr_reader :states
+  attr_accessor :present_state
   
   def initialize(entity, id, ins, outs, initial_states = 1)
     @id = id
@@ -26,7 +27,11 @@ class Individual
     # s0     => [nil,   0, nil,   1] |   0
     # s1     => [1  , nil,   0,   0] |   1
     @states = []
-    initial_states.times{ add_state }
+    initial_states.times{ add_state(initial_states) }
+
+    # code to support state machine simulation
+    # s0 is always the initial state
+    @present_state = 0
   end
   
   def mutate()
@@ -37,18 +42,31 @@ class Individual
     replace_transition  if p(0.5)
     reorder_transitions if p(0.1)
   end
+
+  def transition(input)
+    next_state = states[present_state].transitions[input]
+    @present_state = next_state unless next_state.nil?
+    present_state
+  end
+
+  def output()
+    states[present_state].output
+  end
   
   def render()
     erb :vhdl
   end
 private
   # state collection mutations
-  def add_state()
-    # new state is inserted at a random position
+  def add_state(total_states = nil)
     size = states.size
+    total_states ||= size # otherwise s0 will always be initialized
+                          # with transitions only to itself, and s1 only
+                          # to s0 and s1, etc.
+    # new state is inserted at a random position
     pos = rand(size)
     tail = states.slice!(pos, size-pos)
-    states.push(new_state(size)).concat(tail)
+    states.push(new_state(total_states)).concat(tail)
   end
 
   def remove_state()
@@ -76,9 +94,9 @@ private
   end
   
   # convenience
-  def new_state(size = nil)
-    size ||= states.size  # needed for add_state
-    State.new(@inputs**2, states.size, random_output)
+  def new_state(total_states = nil)
+    total_states ||= states.size  # needed for add_state
+    State.new(2**@inputs, total_states-1, random_output)
   end
 
   def random_state()
@@ -87,7 +105,7 @@ private
   end
 
   def random_output()
-    rand(@outputs**2)
+    rand(2**@outputs)
   end
 
   def p(prob)
