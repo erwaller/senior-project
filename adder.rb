@@ -64,7 +64,7 @@ boundary = 0.4
 while 1 do
   h.iterate()
   puts "Generation #{h.current_generation} best fitness: #{h.best_fitness}"
-  if h.best_fitness > boundary
+  if h.best_fitness >= boundary
     boundary += 0.1
     puts h.best_individual.inspect
   end
