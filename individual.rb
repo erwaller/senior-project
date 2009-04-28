@@ -1,7 +1,7 @@
 require 'monkey'
 
 class Individual
-  attr_reader :states
+  attr_reader :states, :id, :entity, :architecture, :inputs, :outputs, :present_state
   attr_accessor :present_state
   
   def initialize(entity, id, ins, outs, initial_states = 1)
@@ -32,6 +32,14 @@ class Individual
     # code to support state machine simulation
     # s0 is always the initial state
     @present_state = 0
+  end
+
+  def deep_copy()
+    # both individual and state are made up of 'simple' types
+    # so this works safely
+    copy = Marshal.load(Marshal.dump(self))
+    copy.present_state = 0
+    copy
   end
   
   def mutate()
@@ -73,7 +81,7 @@ private
     return unless states.size > 1
     pos = rand(states.size)
     states.slice!(pos)
-    states.each{|s| s.ceil(states.size)} #make sure all transitions are valid
+    states.each{|s| s.ceil(states.size)} # make sure all transitions are valid
   end
 
   def reorder_states()
