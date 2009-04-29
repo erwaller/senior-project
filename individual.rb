@@ -169,8 +169,8 @@ class State
 private
   def state_or_nil(max)
     # returns an integer i or nil where
-    # 0 <= i < max and P(i) == P(nil)
-    r = rand(max*2)
+    # 0 <= i < max and P(i) ~= 2*P(nil)
+    r = rand(max*1.5)
     r > max-1 ? nil : r
   end
 end
