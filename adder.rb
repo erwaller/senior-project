@@ -5,9 +5,10 @@ def pack(a, b)
   (a << 2) + b
 end
 
-def fitness(individual, iterations=10000)
+def fitness(individual, iterations=50000)
   correct = 0.0
-  iterations.times do |i|
+  i = iterations
+  while (i -= 1) > 0 do
     a, b = rand(4), rand(4)
     individual.transition(pack(a,b))
     expected = a + b
@@ -26,7 +27,7 @@ class HillClimber
     @best_fitness = 0
     @best_individual = nil
     
-    # 20 random individuals
+    # Random initial population
     @individuals = Array.new(@population_size).fill do |i|
       # 2-bit adder (no carry-in or carry-out)
       # 4 bits of input, 3 bits of output
@@ -59,7 +60,7 @@ class HillClimber
   end
 end
 
-h = HillClimber.new(20)
+h = HillClimber.new
 boundary = 0.4
 while 1 do
   h.iterate()

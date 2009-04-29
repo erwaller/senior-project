@@ -43,14 +43,14 @@ class Individual
   end
   
   def mutate()
-    remove_state        if p(0.1)
-    add_state           if (states.size < 2 ? p(0.5) : p(0.1))
-    reorder_states      if p(0.1)
+    remove_state        if p(0.05)
+    add_state           if (states.size < 2 ? p(0.25) : p(0.05))
+    reorder_states      if p(0.05)
     change_output       if p(0.3)
-    2.times do
+    5.times do
       replace_transition  if p(1.0)
     end
-    reorder_transitions if p(0.1)
+    reorder_transitions if p(0.3)
   end
 
   def transition(input)
