@@ -27,7 +27,7 @@ end
 class HillClimber
   attr_reader :best_fitness, :best_individual, :current_generation
 
-  def initialize(population_size = 100)
+  def initialize(population_size = 50)
     @population_size = population_size
     @current_generation = -1
     @best_fitness = 0
