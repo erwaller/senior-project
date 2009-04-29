@@ -30,21 +30,25 @@ class Individual
     initial_states.times{ add_state(initial_states) }
 
     # code to support state machine simulation
-    # s0 is always the initial state
-    @present_state = 0
+    reset
   end
 
   def deep_copy()
     # both individual and state are made up of 'simple' types
     # so this works safely
     copy = Marshal.load(Marshal.dump(self))
-    copy.present_state = 0
+    copy.reset
     copy
   end
   
+  def reset()
+    # s0 is always the initial state
+    @present_state = 0
+  end
+  
   def mutate()
-    remove_state        if p(0.05)
-    add_state           if (states.size < 2 ? p(0.25) : p(0.05))
+    remove_state        if p(0)
+    add_state           if (states.size < 2 ? p(0.25) : p(0))
     reorder_states      if p(0.05)
     change_output       if p(0.3)
     5.times do

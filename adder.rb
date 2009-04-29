@@ -1,27 +1,33 @@
 require 'individual'
+require 'monkey'
 
 def pack(a, b)
   # Place two 2bit numbers side-by side in a 4bit number
   (a << 2) + b
 end
 
-def fitness(individual, iterations=50000)
-  correct = 0.0
-  i = iterations
-  while (i -= 1) > 0 do
-    a, b = rand(4), rand(4)
-    individual.transition(pack(a,b))
-    expected = a + b
-    got = individual.output
-    correct += 1 if expected == got
+@@test_cases = []
+4.times do |i|
+  4.times do |j|
+    @@test_cases.push({:in => pack(i,j), :out => i+j})
   end
-  correct / iterations
+end
+
+def fitness(individual, iterations=1000)
+  correct = 0.0
+  iterations.times do
+    @@test_cases.shuffle.each do |t|
+      individual.transition(t[:in])
+      correct += 1 if individual.output == t[:out]
+    end
+  end
+  correct / (@@test_cases.size * iterations)
 end
 
 class HillClimber
   attr_reader :best_fitness, :best_individual, :current_generation
 
-  def initialize(population_size = 20)
+  def initialize(population_size = 100)
     @population_size = population_size
     @current_generation = -1
     @best_fitness = 0
