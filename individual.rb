@@ -45,17 +45,6 @@ class Individual
     # s0 is always the initial state
     @present_state = 0
   end
-  
-  def mutate()
-    #remove_state        if p(0)
-    #add_state           if (states.size < 2 ? p(0.25) : p(0))
-    #reorder_states      if p(0.05)
-    states.each do |s|
-      change_output if p(0.028)
-      s.transitions.map!{|t| p(0.04) ? state_or_nil(states.size) : t}
-    end
-    #reorder_transitions if p(0.05)
-  end
 
   def transition(input)
     next_state = states[present_state].transitions[input]
@@ -67,10 +56,20 @@ class Individual
     states[present_state].output
   end
   
+  def debug()
+    states.each_with_index do |s, i|
+      printf("%3d: ", i)
+      s.transitions.each do |t|
+        printf("%3s ", t)
+      end
+      printf("| %3d\n", s.output)
+    end
+  end
+  
   def render()
     erb :vhdl
   end
-private
+
   # state collection mutations
   def add_state(total_states = nil)
     size = states.size
@@ -93,24 +92,17 @@ private
   def change_output()
     random_state.output = random_output
   end
-  
+
+private  
   # convenience
   def new_state(total_states = nil)
     total_states ||= states.size  # needed for add_state
-    State.new(2**@inputs, total_states, random_output)
+    State.new(inputs, outputs, total_states)
   end
 
   def random_state()
     pos = rand(states.size)
     states[pos]
-  end
-
-  def random_output()
-    rand(2**@outputs)
-  end
-
-  def p(prob)
-    rand() < prob
   end
   
   # code generation
@@ -124,13 +116,24 @@ end
 class State
   attr_accessor :transitions, :output
   
-  def initialize(size, number_of_states, output = 0)
-    @transitions = Array.new(size).fill{|i| state_or_nil(number_of_states)}
+  def initialize(number_of_inputs, number_of_outputs, number_of_states)
+    output ||= random_output(2**number_of_outputs)
     @output = output
+    @transitions = Array.new(2**number_of_inputs).fill do |i|
+      state_or_nil(number_of_states)
+    end
   end
 
   def initialize_copy(from)
     @transitions, @output = from.transitions.clone, from.output
+  end
+  
+  def change_output(max)
+    @output = random_output(max)
+  end
+  
+  def random_output(max)
+    rand(max)
   end
 
   def ceil(max)
@@ -138,6 +141,24 @@ class State
     # transitions will be 0 -> (height-1)
     @transitions.map!{|t| t % max unless t.nil?}
   end
+end
+
+def mutate(individual)
+  mutant = individual.deep_copy
+  #remove_state        if p(0)
+  #add_state           if (states.size < 2 ? p(0.25) : p(0))
+  mutant.states.each do |s|
+    s.change_output(2**mutant.outputs) if p(0.022)
+    s.transitions.map!{|t| p(0.04) ? state_or_nil(mutant.states.size) : t}
+  end
+  mutant
+end
+
+def cross(i1, i2)
+end
+
+def p(prob)
+  rand() < prob
 end
 
 def state_or_nil(max)

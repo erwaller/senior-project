@@ -13,7 +13,7 @@ end
   end
 end
 
-def fitness(individual, iterations=400)
+def fitness(individual, iterations=500)
   correct = 0.0
   iterations.times do
     @@test_cases.shuffle.each do |t|
@@ -27,7 +27,7 @@ end
 class HillClimber
   attr_reader :best_fitness, :best_individual, :current_generation
 
-  def initialize(population_size = 100)
+  def initialize(population_size = 20)
     @population_size = population_size
     @current_generation = -1
     @best_fitness = 0
@@ -57,9 +57,12 @@ class HillClimber
     @best_individual = best_ind
     
     next_generation = Array.new(@population_size).fill do |i|
-      ind = @best_individual.deep_copy
-      ind.mutate unless i == 0 # bring one exact copy to the next generation
-      ind
+      # bring one exact copy to the next generation
+      if i == 0
+        @best_individual.deep_copy
+      else
+        mutate(@best_individual)
+      end
     end
     @individuals = next_generation
     @current_generation += 1
@@ -73,7 +76,8 @@ while 1 do
   puts "Generation #{h.current_generation} best fitness: #{h.best_fitness}"
   if h.best_fitness >= boundary
     boundary += 0.1
-    puts h.best_individual.inspect
+    #puts h.best_individual.inspect
+    h.best_individual.debug
   end
   break if h.best_fitness >= 1
 end
