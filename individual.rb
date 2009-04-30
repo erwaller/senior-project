@@ -50,11 +50,11 @@ class Individual
     #remove_state        if p(0)
     #add_state           if (states.size < 2 ? p(0.25) : p(0))
     #reorder_states      if p(0.05)
-    change_output       if p(0.2)
-    10.times do
-      replace_transition  if p(0.75)
+    states.each do |s|
+      change_output if p(0.03)
+      s.transitions.map!{|t| p(0.025) ? state_or_nil(states.size) : t}
     end
-    reorder_transitions if p(0.05)
+    #reorder_transitions if p(0.05)
   end
 
   def transition(input)
@@ -90,21 +90,8 @@ private
     states.each{|s| s.ceil(states.size)} # make sure all transitions are valid
   end
 
-  def reorder_states()
-    states.shuffle!
-  end
-
   def change_output()
     random_state.output = random_output
-  end
-  
-  # transition mutations
-  def replace_transition()
-    random_state.replace_transition(states.size)
-  end
-  
-  def reorder_transitions()
-    random_state.reorder_transitions 
   end
   
   # convenience
@@ -146,33 +133,18 @@ class State
     @transitions, @output = from.transitions.clone, from.output
   end
 
-  def reorder_transitions
-    @transitions.shuffle!
-  end
-
   def ceil(max)
     # assures all transitions are to valid states
     # transitions will be 0 -> (height-1)
     @transitions.map!{|t| t % max unless t.nil?}
   end
+end
 
-  # transition mutations
-  def replace_transition(max)
-    # semantics similar to rand (max-1 is highest transition)
-    pos = rand(@transitions.size)
-    @transitions[pos] = state_or_nil(max)
-  end
-
-  def reorder_transitions()
-    @transitions.shuffle!
-  end
-private
-  def state_or_nil(max)
-    # returns an integer i or nil where
-    # 0 <= i < max and P(i) ~= 2*P(nil)
-    r = rand(max+1)
-    r > max-1 ? nil : r
-  end
+def state_or_nil(max)
+  # returns an integer i or nil where
+  # 0 <= i < max and P(i) ~= 2*P(nil)
+  r = rand(max+1)
+  r > max-1 ? nil : r
 end
 
 

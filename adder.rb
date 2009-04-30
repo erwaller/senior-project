@@ -13,7 +13,7 @@ end
   end
 end
 
-def fitness(individual, iterations=500)
+def fitness(individual, iterations=400)
   correct = 0.0
   iterations.times do
     @@test_cases.shuffle.each do |t|
@@ -27,7 +27,7 @@ end
 class HillClimber
   attr_reader :best_fitness, :best_individual, :current_generation
 
-  def initialize(population_size = 50)
+  def initialize(population_size = 100)
     @population_size = population_size
     @current_generation = -1
     @best_fitness = 0
