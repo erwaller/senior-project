@@ -47,14 +47,14 @@ class Individual
   end
   
   def mutate()
-    remove_state        if p(0)
-    add_state           if (states.size < 2 ? p(0.25) : p(0))
-    reorder_states      if p(0.05)
-    change_output       if p(0.3)
-    5.times do
-      replace_transition  if p(1.0)
+    #remove_state        if p(0)
+    #add_state           if (states.size < 2 ? p(0.25) : p(0))
+    #reorder_states      if p(0.05)
+    change_output       if p(0.2)
+    10.times do
+      replace_transition  if p(0.75)
     end
-    reorder_transitions if p(0.3)
+    reorder_transitions if p(0.05)
   end
 
   def transition(input)
@@ -110,7 +110,7 @@ private
   # convenience
   def new_state(total_states = nil)
     total_states ||= states.size  # needed for add_state
-    State.new(2**@inputs, total_states-1, random_output)
+    State.new(2**@inputs, total_states, random_output)
   end
 
   def random_state()
@@ -138,7 +138,7 @@ class State
   attr_accessor :transitions, :output
   
   def initialize(size, number_of_states, output = 0)
-    @transitions = Array.new(size).fill{|i| state_or_nil(number_of_states+1)}
+    @transitions = Array.new(size).fill{|i| state_or_nil(number_of_states)}
     @output = output
   end
 
@@ -170,7 +170,7 @@ private
   def state_or_nil(max)
     # returns an integer i or nil where
     # 0 <= i < max and P(i) ~= 2*P(nil)
-    r = rand([max*1.2, max+1].max)
+    r = rand(max+1)
     r > max-1 ? nil : r
   end
 end

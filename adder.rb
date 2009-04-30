@@ -13,7 +13,7 @@ end
   end
 end
 
-def fitness(individual, iterations=1000)
+def fitness(individual, iterations=500)
   correct = 0.0
   iterations.times do
     @@test_cases.shuffle.each do |t|
