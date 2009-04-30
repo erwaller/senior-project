@@ -75,6 +75,7 @@ while 1 do
     boundary += 0.1
     puts h.best_individual.inspect
   end
+  break if h.best_fitness >= 1
 end
 
 

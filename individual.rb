@@ -51,8 +51,8 @@ class Individual
     #add_state           if (states.size < 2 ? p(0.25) : p(0))
     #reorder_states      if p(0.05)
     states.each do |s|
-      change_output if p(0.03)
-      s.transitions.map!{|t| p(0.025) ? state_or_nil(states.size) : t}
+      change_output if p(0.028)
+      s.transitions.map!{|t| p(0.04) ? state_or_nil(states.size) : t}
     end
     #reorder_transitions if p(0.05)
   end
