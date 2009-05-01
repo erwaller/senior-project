@@ -1,10 +1,10 @@
 require 'individual'
 require 'monkey'
 
-class StochasticOptimization
+class OptimizationTechnique
   attr_reader :best_fitness, :best_individual, :current_generation
   
-  def initialize(type_module, population_size = 20)
+  def initialize(type_module, population_size = 1000)
     # Set up the type and call it's init method
     @type_module = type_module
     self.class.class_eval{ include type_module }
@@ -25,7 +25,7 @@ class StochasticOptimization
   end
 end
 
-class HillClimber < StochasticOptimization
+class HillClimber < OptimizationTechnique
   
   def iterate()
     sorted = @individuals.sort_by do |individual|
