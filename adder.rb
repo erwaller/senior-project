@@ -1,38 +1,16 @@
 require 'individual'
 require 'monkey'
 
-def pack(a, b)
-  # Place two 2bit numbers side-by side in a 4bit number
-  (a << 2) + b
-end
-
-@@test_cases = []
-4.times do |i|
-  4.times do |j|
-    @@test_cases.push({:in => pack(i,j), :out => i+j})
-  end
-end
-
-def fitness(individual, iterations=500)
-  correct = 0.0
-  iterations.times do
-    @@test_cases.shuffle.each do |t|
-      individual.transition(t[:in])
-      correct += 1 if individual.output == t[:out]
-    end
-  end
-  correct / (@@test_cases.size * iterations)
-end
-
-class HillClimber
+  
+class StochasticOptimization
   attr_reader :best_fitness, :best_individual, :current_generation
-
+  
   def initialize(population_size = 20)
     @population_size = population_size
     @current_generation = -1
     @best_fitness = 0
     @best_individual = nil
-    
+  
     # Random initial population
     @individuals = Array.new(@population_size).fill do |i|
       # 2-bit adder (no carry-in or carry-out)
@@ -40,36 +18,66 @@ class HillClimber
       # we want 7 distinct outputs, so give it 7 initial states
       Individual.new('adder', i, 4, 3, 7)
     end
-  end
-
-  def iterate()
-    best_fit = 0
-    best_ind = nil
-    @individuals.each do |individual|
-       fit = fitness(individual)
-       if fit > best_fit
-         best_fit = fit
-         best_ind = individual
-       end
-    end
-
-    @best_fitness = best_fit
-    @best_individual = best_ind
     
-    next_generation = Array.new(@population_size).fill do |i|
-      # bring one exact copy to the next generation
-      if i == 0
-        @best_individual.deep_copy
-      else
-        mutate(@best_individual)
-      end
+    # Call the included module's init function
+    init()
+  end
+end
+  
+
+class HillClimber < StochasticOptimization
+  
+  def iterate()
+    sorted = @individuals.sort_by do |individual|
+      individual.fitness = fitness(individual)
     end
+
+    @best_individual = sorted.last
+    @best_fitness = @best_individual.fitness
+  
+    next_generation = Array.new(@population_size - 1).fill do |i|
+      mutate(@best_individual)
+    end.push(@best_individual.deep_copy) # bring a direct copy of the best individual
+    
     @individuals = next_generation
     @current_generation += 1
   end
 end
 
-h = HillClimber.new
+module Adder
+  TEST_CASES = []
+  
+  def init()
+    4.times do |i|
+      4.times do |j|
+        TEST_CASES.push({:in => pack(i,j), :out => i+j})
+      end
+    end
+  end
+  
+  def fitness(individual, iterations=500)
+    correct = 0.0
+    iterations.times do
+      TEST_CASES.shuffle.each do |t|
+        individual.transition(t[:in])
+        correct += 1 if individual.output == t[:out]
+      end
+    end
+    correct / (TEST_CASES.size * iterations)
+  end
+
+  def pack(a, b)
+    # Place two 2bit numbers side-by side in a 4bit number
+    (a << 2) + b
+  end
+end
+
+
+class HillClimber
+  include Adder
+end
+
+h = HillClimber.new()
 boundary = 0.4
 while 1 do
   h.iterate()
@@ -81,5 +89,3 @@ while 1 do
   end
   break if h.best_fitness >= 1
 end
-
-

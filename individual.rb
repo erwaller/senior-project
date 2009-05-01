@@ -2,7 +2,7 @@ require 'monkey'
 
 class Individual
   attr_reader :states, :id, :entity, :architecture, :inputs, :outputs, :present_state
-  attr_accessor :present_state
+  attr_accessor :present_state, :fitness
   
   def initialize(entity, id, ins, outs, initial_states = 1)
     @id = id
@@ -44,6 +44,7 @@ class Individual
   def reset()
     # s0 is always the initial state
     @present_state = 0
+    @fitness = nil
   end
 
   def transition(input)
