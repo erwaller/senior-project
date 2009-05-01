@@ -13,7 +13,7 @@ module Adder
     end
   end
   
-  def fitness(individual, iterations=500)
+  def fitness(individual, iterations=100)
     correct = 0.0
     iterations.times do
       TEST_CASES.shuffle.each do |t|

@@ -37,8 +37,9 @@ class HillClimber < OptimizationTechnique
     @best_individual = sorted.last
     @best_fitness = @best_individual.fitness
     
-    next_generation = [@best_individual.deep_copy] + # copy the best
-                      sorted.shuffle[0..(keep-2)] + # bring 1/10 of the others
+    next_generation = sorted[0..(keep-1)].map do |individual|
+                        individual.deep_copy     # bring the top 10% unaltered
+                      end +
                       Array.new(@population_size - keep).fill do |i|
                         mutate(@best_individual) # rest are mutations
                       end
@@ -49,3 +50,5 @@ class HillClimber < OptimizationTechnique
 end
 
 class GeneticRecombination
+end
+
