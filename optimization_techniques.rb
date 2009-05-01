@@ -4,7 +4,7 @@ require 'monkey'
 class OptimizationTechnique
   attr_reader :best_fitness, :best_individual, :current_generation
   
-  def initialize(type_module, population_size = 1000)
+  def initialize(type_module, population_size = 200)
     # Set up the type and call it's init method
     @type_module = type_module
     self.class.class_eval{ include type_module }
@@ -28,18 +28,24 @@ end
 class HillClimber < OptimizationTechnique
   
   def iterate()
+    keep = @population_size / 10
+    
     sorted = @individuals.sort_by do |individual|
       individual.fitness = fitness(individual)
     end
 
     @best_individual = sorted.last
     @best_fitness = @best_individual.fitness
-  
-    next_generation = Array.new(@population_size - 1).fill do |i|
-      mutate(@best_individual)
-    end.push(@best_individual.deep_copy) # bring a direct copy of the best individual
+    
+    next_generation = [@best_individual.deep_copy] + # copy the best
+                      sorted.shuffle[0..(keep-2)] + # bring 1/10 of the others
+                      Array.new(@population_size - keep).fill do |i|
+                        mutate(@best_individual) # rest are mutations
+                      end
     
     @individuals = next_generation
     @current_generation += 1
   end
 end
+
+class GeneticRecombination

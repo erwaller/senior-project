@@ -156,6 +156,7 @@ def mutate(individual)
 end
 
 def cross(i1, i2)
+  
 end
 
 def p(prob)
