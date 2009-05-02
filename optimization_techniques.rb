@@ -25,11 +25,9 @@ class OptimizationTechnique
   end
 end
 
-class HillClimber < OptimizationTechnique
+class GeneticAsexual < OptimizationTechnique
   
   def iterate()
-    keep = @population_size / 10
-    
     sorted = @individuals.sort_by do |individual|
       individual.fitness = fitness(individual)
     end
@@ -37,11 +35,14 @@ class HillClimber < OptimizationTechnique
     @best_individual = sorted.last
     @best_fitness = @best_individual.fitness
     
-    next_generation = sorted[0..(keep-1)].map do |individual|
-                        individual.deep_copy     # bring the top 10% unaltered
+    # I think this is steady-state selection
+    # hopefully this will allow for more diversity to survive
+    top_half = sorted[-(sorted.length/2)..-1]
+    next_generation = top_half.map do |individual|
+                        individual.deep_copy # top half carried directly
                       end +
-                      Array.new(@population_size - keep).fill do |i|
-                        mutate(@best_individual) # rest are mutations
+                      top_half.map do |individual|
+                        mutate(individual)   # top half asexually reproduce
                       end
     
     @individuals = next_generation

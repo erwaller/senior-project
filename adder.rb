@@ -30,7 +30,7 @@ module Adder
   end
 end
 
-h = HillClimber.new(Adder)
+h = GeneticAsexual.new(Adder)
 boundary = 0.4
 while 1 do
   h.iterate()
