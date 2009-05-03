@@ -146,8 +146,8 @@ end
 
 def mutate(individual)
   mutant = individual.deep_copy
-  #remove_state        if p(0)
-  #add_state           if (states.size < 2 ? p(0.25) : p(0))
+  mutant.remove_state   if p(0.015)
+  mutant.add_state      if p(0.015)
   mutant.states.each do |s|
     s.change_output(2**mutant.outputs) if p(0.022)
     s.transitions.map!{|t| p(0.04) ? state_or_nil(mutant.states.size) : t}
