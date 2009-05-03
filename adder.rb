@@ -17,7 +17,7 @@ module Adder
     TEST_CASES.push({:in => pack(3,3), :out => 6})
   end
   
-  def fitness(individual, iterations=100)
+  def fitness(individual, iterations=450)
     correct = 0.0
     iterations.times do
       TEST_CASES.shuffle.each do |t|
