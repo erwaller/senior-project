@@ -37,12 +37,12 @@ class GeneticAsexual < OptimizationTechnique
     
     # I think this is steady-state selection
     # hopefully this will allow for more diversity to survive
-    top_half = sorted[-(sorted.length/2)..-1]
-    next_generation = top_half.map do |individual|
-                        individual.deep_copy # top half carried directly
+    top_ten = sorted[-10..-1]
+    next_generation = top_ten.map do |individual|
+                        individual.deep_copy # top ten carried directly
                       end +
-                      top_half.map do |individual|
-                        mutate(individual)   # top half asexually reproduce
+                      Array.new(@population_size-10).fill do |i|
+                        mutate(@best_individual) # rest are mutations of the best one
                       end
     
     @individuals = next_generation

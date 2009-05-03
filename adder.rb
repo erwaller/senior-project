@@ -11,6 +11,10 @@ module Adder
         TEST_CASES.push({:in => pack(i,j), :out => i+j})
       end
     end
+    # add extra instances of the 0 and 6 cases so that
+    # each output equiprobable
+    TEST_CASES.push({:in => pack(0,0), :out => 0})
+    TEST_CASES.push({:in => pack(3,3), :out => 6})
   end
   
   def fitness(individual, iterations=100)
