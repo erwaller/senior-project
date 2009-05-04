@@ -34,15 +34,13 @@ module Adder
   end
 end
 
+start_time = Time.now
 h = GeneticAsexual.new(Adder)
-boundary = 0.4
 while 1 do
   h.iterate()
   puts "Generation #{h.current_generation} best fitness: #{h.best_fitness}"
-  if h.best_fitness >= boundary
-    boundary += 0.1
-    #puts h.best_individual.inspect
-    h.best_individual.debug
-  end
+  h.best_individual.debug
   break if h.best_fitness >= 1
 end
+end_time = Time.now
+puts "Success! in #{end_time-start_time} seconds"
