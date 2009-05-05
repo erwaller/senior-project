@@ -35,7 +35,7 @@ module Adder
 end
 
 start_time = Time.now
-h = GeneticAsexual.new(Adder)
+h = Optimization::GeneticAsexual.new(Adder)
 while 1 do
   h.iterate()
   puts "Generation #{h.current_generation} best fitness: #{h.best_fitness}"

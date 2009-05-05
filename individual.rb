@@ -156,7 +156,13 @@ def mutate(individual)
 end
 
 def cross(i1, i2)
-  
+  # offspring will always have the minimun number of states
+  offspring = i1.deep_copy
+  zip = i1.states.zip(i2.states)
+  zip.each_with_index do |pair, i|
+    offspring.states[i] = pair[i%2].clone
+  end
+  offspring
 end
 
 def p(prob)
