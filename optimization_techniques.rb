@@ -6,7 +6,7 @@ module Optimization
   class OptimizationTechnique
     attr_reader :best_fitness, :best_individual, :current_generation
   
-    def initialize(type_module, population_size = 200)
+    def initialize(type_module, ins, outs, initial_states = 1, population_size = 200)
       # Set up the type and call it's init method
       @type_module = type_module
       self.class.class_eval{ include type_module }
@@ -22,7 +22,7 @@ module Optimization
         # 2-bit adder (no carry-in or carry-out)
         # 4 bits of input, 3 bits of output
         # we want 7 distinct outputs, so give it 7 initial states
-        Individual.new('adder', i, 4, 3, 7)
+        Individual.new('adder', i, ins, outs, initial_states)
       end
     end
   end

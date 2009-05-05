@@ -49,8 +49,7 @@ class Individual
 
   def transition(input)
     next_state = states[present_state].transitions[input]
-    @present_state = next_state unless next_state.nil?
-    present_state
+    @present_state = next_state
   end
 
   def output()
@@ -78,15 +77,15 @@ class Individual
                           # with transitions only to itself, and s1 only
                           # to s0 and s1, etc.
     # new state is inserted at a random position
-    pos = rand(size)
-    tail = states.slice!(pos, size-pos)
+    position = rand(size)
+    tail = states.slice!(position, size - position)
     states.push(new_state(total_states)).concat(tail)
   end
 
   def remove_state()
     return unless states.size > 1
-    pos = rand(states.size)
-    states.slice!(pos)
+    position = rand(states.size)
+    states.slice!(position)
     states.each{|s| s.ceil(states.size)} # make sure all transitions are valid
   end
 
@@ -102,8 +101,7 @@ private
   end
 
   def random_state()
-    pos = rand(states.size)
-    states[pos]
+    states[rand(states.size)]
   end
   
   # code generation
@@ -121,7 +119,7 @@ class State
     output ||= random_output(2**number_of_outputs)
     @output = output
     @transitions = Array.new(2**number_of_inputs).fill do |i|
-      state_or_nil(number_of_states)
+      random_transition(number_of_states)
     end
   end
 
@@ -150,7 +148,7 @@ def mutate(individual)
   #mutant.add_state      if p(0.015)
   mutant.states.each do |s|
     s.change_output(2**mutant.outputs) if p(0.022)
-    s.transitions.map!{|t| p(0.04) ? state_or_nil(mutant.states.size) : t}
+    s.transitions.map!{|t| p(0.04) ? random_transition(mutant.states.size) : t}
   end
   mutant
 end
@@ -169,11 +167,11 @@ def p(prob)
   rand() < prob
 end
 
-def state_or_nil(max)
-  # returns an integer i or nil where
-  # 0 <= i < max and P(i) ~= 2*P(nil)
-  r = rand(max+1)
-  r > max-1 ? nil : r
+def random_transition(max)
+  # returns an integer i
+  # where 0 <= i < max
+  # (no longer bothers with nil transitions)
+  rand(max)
 end
 
 
