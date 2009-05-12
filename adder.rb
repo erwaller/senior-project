@@ -35,12 +35,13 @@ module Adder
 end
 
 start_time = Time.now
-h = Optimization::GeneticAsexual.new(Adder, 4, 3, 7)
+h = Optimization::GeneticRecombinant.new(Adder, 4, 3, 7)
 while 1 do
   h.iterate()
   puts "Generation #{h.current_generation} best fitness: #{h.best_fitness}"
   h.best_individual.debug
   break if h.best_fitness >= 1
 end
+puts h.best_individual.dump.inspect
 end_time = Time.now
 puts "Success! in #{end_time-start_time} seconds"
