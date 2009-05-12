@@ -33,7 +33,7 @@ class Individual
     reset
   end
 
-  def deep_copy()
+  def deep_copy
     # both individual and state are made up of 'simple' types
     # so this works safely
     copy = Marshal.load(Marshal.dump(self))
@@ -41,7 +41,11 @@ class Individual
     copy
   end
   
-  def reset()
+  def dump
+    Marshal.dump(self)
+  end
+  
+  def reset
     # s0 is always the initial state
     @present_state = 0
     @fitness = nil
@@ -52,11 +56,11 @@ class Individual
     @present_state = next_state
   end
 
-  def output()
+  def output
     states[present_state].output
   end
   
-  def debug()
+  def debug
     states.each_with_index do |s, i|
       printf("%3d: ", i)
       s.transitions.each do |t|
@@ -66,7 +70,7 @@ class Individual
     end
   end
   
-  def render()
+  def render
     erb :vhdl
   end
 
@@ -82,14 +86,14 @@ class Individual
     states.push(new_state(total_states)).concat(tail)
   end
 
-  def remove_state()
+  def remove_state
     return unless states.size > 1
     position = rand(states.size)
     states.slice!(position)
     states.each{|s| s.ceil(states.size)} # make sure all transitions are valid
   end
 
-  def change_output()
+  def change_output
     random_state.output = random_output
   end
 
@@ -100,7 +104,7 @@ private
     State.new(inputs, outputs, total_states)
   end
 
-  def random_state()
+  def random_state
     states[rand(states.size)]
   end
   

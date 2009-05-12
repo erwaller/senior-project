@@ -9,6 +9,7 @@ module Optimization
     def initialize(type_module, ins, outs, initial_states = 1, population_size = 200)
       # Set up the type and call it's init method
       @type_module = type_module
+      @entity = type_module.to_s
       self.class.class_eval{ include type_module }
       init()
     
@@ -22,7 +23,7 @@ module Optimization
         # 2-bit adder (no carry-in or carry-out)
         # 4 bits of input, 3 bits of output
         # we want 7 distinct outputs, so give it 7 initial states
-        Individual.new('adder', i, ins, outs, initial_states)
+        Individual.new(@entity, i, ins, outs, initial_states)
       end
     end
   end
