@@ -1,23 +1,24 @@
-# 2-bit adder experiment
+# 2 input multiplexer experiment
 
 require 'optimization_techniques'
 
-module Adder
+module Multiplexer
   TEST_CASES = []
   
-  def init()
-    4.times do |i|
-      4.times do |j|
-        TEST_CASES.push({:in => pack(i,j), :out => i+j})
+  def init
+    2.times do |in0|
+      2.times do |in1|
+        2.times do |select|
+          TEST_CASES.push({
+            :in => pack(in0,in1,select),
+            :out => select == 0 ? in0 : in1
+          })
+        end
       end
     end
-    # add extra instances of the 0 and 6 cases so that
-    # each output equiprobable
-    TEST_CASES.push({:in => pack(0,0), :out => 0})
-    TEST_CASES.push({:in => pack(3,3), :out => 6})
   end
   
-  def fitness(individual, iterations=450)
+  def fitness(individual, iterations=100)
     correct = 0.0
     iterations.times do
       TEST_CASES.shuffle.each do |t|
@@ -28,14 +29,15 @@ module Adder
     correct / (TEST_CASES.size * iterations)
   end
 
-  def pack(a, b)
-    # Place two 2bit numbers side-by side in a 4bit number
-    (a << 2) + b
+  def pack(in0, in1, select)
+    # Place three 1 bit values side-by side in a 3bit number
+    (((in0 << 1) + in1) << 1) + select
   end
 end
 
 start_time = Time.now
-h = Optimization::GeneticRecombinant.new(Adder, 4, 3, 7)
+# 2 inputs + control, 1 output
+h = Optimization::GeneticRecombinant.new(Multiplexer, 3, 1, 2)
 while 1 do
   h.iterate()
   puts "Generation #{h.current_generation} best fitness: #{h.best_fitness}"
