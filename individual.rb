@@ -142,13 +142,22 @@ class State
   end
 end
 
-def mutate(individual)
+def mutate(individual, probs = {})
+  default_probs = {
+    :change_output     => 0.022,
+    :change_transition => 0.04,
+    :add_state         => 0.015,
+    :remove_state      => 0.015
+  }
+  probs = default_probs.merge(probs)
   mutant = individual.deep_copy
-  #mutant.remove_state   if p(0.015)
-  #mutant.add_state      if p(0.015)
+  #mutant.remove_state   if p(probs[:remove_state])
+  #mutant.add_state      if p(probs[:add_state])
   mutant.states.each do |s|
-    s.change_output(2**mutant.outputs) if p(0.022)
-    s.transitions.map!{|t| p(0.04) ? random_transition(mutant.states.size) : t}
+    s.change_output(2**mutant.outputs) if p(probs[:change_output])
+    s.transitions.map! do |t|
+      p(probs[:change_transition]) ? random_transition(mutant.states.size) : t
+    end
   end
   mutant
 end

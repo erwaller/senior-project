@@ -52,7 +52,7 @@ module Optimization
     end
   end
 
-  class GeneticRecombination
+  class GeneticRecombinant < OptimizationTechnique
   
     def iterate()
       sorted = @individuals.sort_by do |individual|
@@ -64,12 +64,18 @@ module Optimization
     
       next_generation = Array.new(@population_size).fill do |i|
         # choose two individuals
-        # cross the two individuals
+        # mutate and cross them
+        cross(mutate(sorted[power_skew(@population_size, 6)]),
+              mutate(sorted[power_skew(@population_size, 6)]))
       end
       @individuals = next_generation
       @current_generation += 1
     end
   private
-    
+  
+    def power_skew(max, power)
+      # way too little skew towards higher numbers
+      Integer((rand**(1.0/power))*max)
+    end
   end
 end
