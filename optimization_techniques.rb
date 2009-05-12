@@ -62,9 +62,9 @@ module Optimization
       @best_individual = sorted.last
       @best_fitness = @best_individual.fitness
       
-      #top_ten = sorted[-10..-1]
-      next_generation = [@best_individual.deep_copy] # keep the best, forget what this is called
-      next_generation += Array.new(@population_size-1).fill do |i|
+      top_ten = sorted[-10..-1] # keep the ten best
+      next_generation = top_ten.map{|i| i.deep_copy}
+      next_generation += Array.new(@population_size-10).fill do |i|
         # choose two individuals
         # cross them and mutate the result
         mutate(cross(sorted[power_skew(@population_size, 6)],
