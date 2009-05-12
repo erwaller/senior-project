@@ -61,17 +61,28 @@ module Optimization
 
       @best_individual = sorted.last
       @best_fitness = @best_individual.fitness
-    
-      next_generation = Array.new(@population_size).fill do |i|
+      
+      #top_ten = sorted[-10..-1]
+      next_generation = [@best_individual.deep_copy] # keep the best, forget what this is called
+      next_generation += Array.new(@population_size-1).fill do |i|
         # choose two individuals
-        # mutate and cross them
-        cross(mutate(sorted[power_skew(@population_size, 6)]),
-              mutate(sorted[power_skew(@population_size, 6)]))
+        # cross them and mutate the result
+        mutate(cross(sorted[power_skew(@population_size, 6)],
+                     sorted[power_skew(@population_size, 6)]), probs)
       end
+      
       @individuals = next_generation
       @current_generation += 1
     end
-  private
+    
+    def probs
+      @probs ||= {
+        :change_output     => 0.015,
+        :change_transition => 0.02,
+        :add_state         => 0.015,
+        :remove_state      => 0.015
+      }
+    end
   
     def power_skew(max, power)
       # way too little skew towards higher numbers
