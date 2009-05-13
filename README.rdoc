@@ -11,7 +11,7 @@ Then just run the file
 
 == Creating an Experiment
 
-Only a few things need to be specified: the number of inputs and outputs will have and a fitness function which accepts an individual and returns a fitness between 0 and 1.
+Only a few things need to be specified: the number of inputs and outputs for the state-machine and a fitness function which accepts an individual and returns a fitness between 0 and 1. You can also specify an initial number of states for the individuals in the initial population.
 
 A fitness function and any supporting code are palced in a module with the name of the experiment. The module name gets passed to the optimization algorithm constructor so that the module can be mixed in (methods defined in the module become instance methods of the optimization algorithm's class).
 
