@@ -1,4 +1,4 @@
-== Running an Experiment
+= Moore machine evolution in ruby
 
 ruby1.9 is considerably faster than 1.8, and it's in the ubuntu repos
 
