@@ -1,0 +1,23 @@
+== Running an Experiment
+
+ruby1.9 is considerably faster than 1.8, and it's in the ubuntu repos
+
+  sudo apt-get install ruby1.9
+
+Then just run the file
+
+  ruby1.9 counter.rb
+
+
+== Creating an Experiment
+
+Only a few things need to be specified: the number of inputs and outputs will have and a fitness function which accepts an individual and returns a fitness between 0 and 1.
+
+A fitness function and any supporting code are palced in a module with the name of the experiment. The module name gets passed to the optimization algorithm constructor so that the module can be mixed in (methods defined in the module become instance methods of the optimization algorithm's class).
+
+Now it's up to you what to do, generally you would just iterate the optimization algorithm until a solution with an acceptable fitness is found, outputting whatever debug info you'd like along the way.
+
+  while 1 do
+    h.iterate()
+    break if h.best_fitness >= 1
+  end

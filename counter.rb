@@ -8,7 +8,7 @@ module Counter
     # do nothing, but define init to prevent method missing error
   end
   
-  def fitness(individual, iterations=100)
+  def fitness(individual, iterations=500)
     correct = 0.0
     i = 0
     iterations.times do
