@@ -78,7 +78,7 @@ module Optimization
     
     def probs
       @probs ||= {
-        :change_output     => 0.015,
+        :change_output     => 0.02,
         :change_transition => 0.02,
         :add_state         => 0.015,
         :remove_state      => 0.015

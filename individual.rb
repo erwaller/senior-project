@@ -54,6 +54,7 @@ class Individual
   def transition(input)
     next_state = states[present_state].transitions[input]
     @present_state = next_state
+    output # so you don't have to keep checking the output when debugging in irb
   end
 
   def output
